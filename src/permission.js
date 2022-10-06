@@ -21,11 +21,13 @@ router.beforeEach((to, from, next) => {
       next('/login');
     }
   }
+
+  NProgress.done();
 });
 
-router.afterEach(route => {
-  NProgress.done();
-})
+// router.afterEach(route => {
+//   NProgress.done();
+// })
 
 
 
