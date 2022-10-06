@@ -1,9 +1,9 @@
 import { login } from "@/api/user"
-import { setToken } from "@/utils/auth";
+import { setToken, getToken } from "@/utils/auth";
 export default {
   namespaced: true,
   state: {
-    token:''
+    token: getToken()
   },
   mutations: {
     updateToken: (state,payload) => state.token = payload,

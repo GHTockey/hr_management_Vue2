@@ -1,7 +1,31 @@
 import store from "@/store";
 import router from "@/router";
+import NProgress from "nprogress";
+import 'nprogress/nprogress.css';
 
+const whiteList = ['/login', '/404'];
 
+router.beforeEach((to, from, next) => {
+  NProgress.start();
+  // console.log(!!store.getters.token);
+  if (store.getters.token) { // 有无 token
+    if (to.path === '/login') { // 是否在登录页
+      next('/');
+    } else {
+      next();
+    }
+  } else { // 没有 token
+    if (whiteList.indexOf(to.path) != -1) { // hash 是否在白名单
+      next();
+    } else { // 不在白名单
+      next('/login');
+    }
+  }
+});
+
+router.afterEach(route => {
+  NProgress.done();
+})
 
 
 
