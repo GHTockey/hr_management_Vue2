@@ -17,18 +17,18 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+    roles: ['admin','editor']    控制页面角色（您可以设置多个角色）
+    title: 'title'               名称显示在侧边栏和面包屑中（推荐套装）
+    icon: 'svg-name'/'el-icon-x' 图标显示在边栏中
+    breadcrumb: false            如果设置为 false，则项目将隐藏在痕迹导航中（默认值为 true）
+    activeMenu: '/example/list'  如果设置了路径，侧边栏将突出显示您设置的路径
   }
  */
 
 /**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
+ * 常量路由
+ * 没有权限要求的基页
+ * 可以访问所有角色
  */
 export const constantRoutes = [
   {
