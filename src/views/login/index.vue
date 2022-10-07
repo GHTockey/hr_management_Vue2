@@ -93,7 +93,7 @@ export default {
     // };
     return {
       loginForm: {
-        mobile: "13800000001",
+        mobile: "13800000002",
         password: "123456",
       },
       loginRules: {
@@ -102,12 +102,12 @@ export default {
             required: true,
             trigger: "blur",
             // message: "手机号必填",
-            validator: validateUsername,
+            // validator: validateUsername,
           },
         ],
         password: [
           // { trigger: "blur", validator: validatePassword },
-          { required: true, min: 6, max: 16, message: "密码长度在6~16位之间" },
+          { required: true, min: 6, max: 16, message: "密码长度在 6~16 位之间" },
         ],
       },
       loading: false,
