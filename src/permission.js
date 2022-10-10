@@ -12,6 +12,9 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') { // 是否在登录页
       next('/');
     } else {
+      if (!store.state.user.userInfo.userId) {
+        store.dispatch('user/getUserInfo')
+      }
       next();
     }
   } else { // 没有 token

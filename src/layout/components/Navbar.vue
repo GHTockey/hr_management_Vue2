@@ -14,8 +14,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar" />
-          <span class="name">管理员</span>
+          <img v-isImgErr="defaultImg" :src="avatar" class="user-avatar" />
+          <span class="name">{{name}}</span>
           <i class="el-icon-caret-bottom" style="color: #fff" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -25,7 +25,7 @@
           <a target="_blank" href="https://gitee.com/shuiruohanyu/hrsaas53">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item divided @click.native="logout" @click="logout">
             <span style="display: block">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -35,19 +35,26 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 
 export default {
+  data () {
+    return {
+      defaultImg: require("@/assets/common/bigUserHeader.png") // 动态导入
+      // defaultImg: "@/assets/common/bigUserHeader.png" // 不能写死,会一直触发 vue 更新 dom
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"]),
+    ...mapGetters(["sidebar", "avatar","name"]),
   },
   methods: {
+    ...mapActions(['logout']),
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },
@@ -55,7 +62,7 @@ export default {
       await this.$store.dispatch("user/logout");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
-  },
+  }
 };
 </script>
 
@@ -115,7 +122,7 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        // margin-top: 5px;
         position: relative;
 
         .user-avatar {
@@ -142,7 +149,7 @@ export default {
   font-size: 18px;
   line-height: 50px;
   margin-left: 10px;
-  color: #ffffff;
+  color: #fff;
   cursor: text;
   .breadBtn {
     background: #84a9fe;
