@@ -1,5 +1,5 @@
 import { login, getUserInfo, getUserDetailById } from "@/api/user"
-import { setToken, getToken, removeToken } from "@/utils/auth";
+import { setToken, getToken, removeToken, setTimeStamp } from "@/utils/auth";
 export default {
   namespaced: true,
   state: {
@@ -28,6 +28,7 @@ export default {
       if (res) {
         context.commit('updateToken', res);
         setToken(res); // 调用第三方包方法,将 token 存储到 cookie
+        setTimeStamp(); // 存入时间戳
       } else {
         console.log('没有请求到相关数据');
       }
@@ -41,6 +42,7 @@ export default {
       return res // 这里为什么要返回 为后面埋下伏笔
     },
 
+    // 退出登录
     logout(context){
       context.commit('reomveUserInfo');
       context.commit('removeToken');

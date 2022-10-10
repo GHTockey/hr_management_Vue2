@@ -25,7 +25,7 @@
           <a target="_blank" href="https://gitee.com/shuiruohanyu/hrsaas53">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout" @click="logout">
+          <el-dropdown-item divided @click.native="logout">
             <span style="display: block">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
