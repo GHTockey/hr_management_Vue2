@@ -19,7 +19,7 @@ export function removeToken() {
 export function getTimeStamp() {
   return Cookies.get(timeKey)
 }
-// 设置时间戳存入 cookie
+// 设置时间戳
 export function setTimeStamp() {
   Cookies.set(timeKey, Date.now())
 }

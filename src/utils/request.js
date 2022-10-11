@@ -3,7 +3,7 @@ import axios from "axios";
 import { Message } from "element-ui";
 import { getTimeStamp } from "@/utils/auth";
 import router from "@/router";
-let TimeOut = 3600;
+let TimeOut = 3600; // 设置 token 的有效时间 秒
 
 // 创建实例
 const service = axios.create({
