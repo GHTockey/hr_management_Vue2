@@ -39,7 +39,7 @@ module.exports = {
     },
     proxy:{
       '/api': {
-        target:'http://ihrm-java.itheima.net', // 代理地址
+        target:'http://ihrm.itheima.net', // 代理地址
         changeOrigin: true, // 是否跨域
         pathRewrite: { // 路径重写
           // '^/api': '', // 将 /api 变为空

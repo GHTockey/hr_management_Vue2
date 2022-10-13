@@ -2,6 +2,7 @@
 
 // 递归数据转树形
 export function tranListToTreeData(list, rootValue) {
+  // debugger
   var arr = []
   list.forEach(item => {
     if (item.pid === rootValue) {

@@ -8,7 +8,7 @@ let TimeOut = 3600; // 设置 token 的有效时间 秒
 // 创建实例
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_API, // 读取 node 环境里的变量设为请求的基础地址
-    timeout: 3000 // 请求超时时间
+    timeout: 8000 // 请求超时时间
 });
 // 请求拦截
 service.interceptors.request.use(config => {
