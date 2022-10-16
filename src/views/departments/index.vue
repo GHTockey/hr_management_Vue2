@@ -3,7 +3,7 @@
     <div class="app-container">
       <el-card class="tree-card">
         <!-- 用了一个行列布局 -->
-        <TreeNode :treeNode="company" :isRoot="true" />
+        <TreeNode :treeNode="company" :isRoot="true" @addDepts="addDepts" />
 
         <el-tree
           :data="departs"
@@ -20,7 +20,7 @@
           />
         </el-tree>
       </el-card>
-      <AddDept :showDialog="showDialog" />
+      <AddDept :showDialog="showDialog" :treeNode="node" />
     </div>
   </div>
 </template>
@@ -39,7 +39,7 @@ export default {
         label: "name", // 表示 从这个属性显示内容
       },
       showDialog: false,
-      node: null
+      node: null,
     };
   },
   components: {
@@ -53,19 +53,18 @@ export default {
     async getDepartmentsData() {
       let res = await getDepartments();
       // console.log(res);
-      this.company = { name: res.companyName, manager: "负责人" };
+      this.company = { name: res.companyName, manager: "负责人" , id: ''};
       // this.departs = res.depts; // 需要将其转化成树形结构⬇️
       this.departs = tranListToTreeData(res.depts, ""); // 需要将其转化成树形结构
       // console.log(this.departs);
     },
-  // 显示对话框
-  addDepts(treeNode){
-    // console.log(treeNode);
-    this.showDialog = true;
-    this.node = treeNode;
-  }
+    // 显示对话框
+    addDepts(treeNode) {
+      // console.log(treeNode);
+      this.showDialog = true;
+      this.node = treeNode;
+    },
   },
-
 };
 </script>
 
