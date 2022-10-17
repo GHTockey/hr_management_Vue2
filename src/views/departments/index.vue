@@ -13,7 +13,6 @@
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <TreeNode
-            ref="addDept"
             slot-scope="{ data }"
             :treeNode="data"
             @delDeprt="getDepartmentsData"
@@ -23,6 +22,7 @@
         </el-tree>
       </el-card>
       <AddDept
+      ref="addDept"
         :showDialog.sync="showDialog"
         :treeNode="node"
         @addDepts="getDepartmentsData"
@@ -76,8 +76,8 @@ export default {
       // 首先打开弹层
       this.showDialog = true;
       this.node = data; // 赋值操作的节点
-
-      console.log( this.$refs.addDept);
+      console.log(this.$refs.addDept);
+      this.$refs.addDept.getDepartDetail(data.id);
     },
   },
 };
