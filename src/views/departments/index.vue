@@ -13,14 +13,20 @@
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <TreeNode
+            ref="addDept"
             slot-scope="{ data }"
             :treeNode="data"
             @delDeprt="getDepartmentsData"
             @addDepts="addDepts"
+            @editDepts="editDepts"
           />
         </el-tree>
       </el-card>
-      <AddDept :showDialog="showDialog" :treeNode="node" />
+      <AddDept
+        :showDialog.sync="showDialog"
+        :treeNode="node"
+        @addDepts="getDepartmentsData"
+      />
     </div>
   </div>
 </template>
@@ -53,7 +59,7 @@ export default {
     async getDepartmentsData() {
       let res = await getDepartments();
       // console.log(res);
-      this.company = { name: res.companyName, manager: "负责人" , id: ''};
+      this.company = { name: res.companyName, manager: "负责人", id: "" };
       // this.departs = res.depts; // 需要将其转化成树形结构⬇️
       this.departs = tranListToTreeData(res.depts, ""); // 需要将其转化成树形结构
       // console.log(this.departs);
@@ -63,6 +69,15 @@ export default {
       // console.log(treeNode);
       this.showDialog = true;
       this.node = treeNode;
+    },
+
+    // 编辑弹框
+    editDepts(data) {
+      // 首先打开弹层
+      this.showDialog = true;
+      this.node = data; // 赋值操作的节点
+
+      console.log( this.$refs.addDept);
     },
   },
 };

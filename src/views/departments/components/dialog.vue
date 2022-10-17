@@ -1,6 +1,11 @@
 <template>
-  <el-dialog title="添加部门" :visible="showDialog">
-    <el-form label-width="120px" :rules="rules" :model="fromData">
+  <el-dialog title="添加部门" :visible="showDialog" @close="close">
+    <el-form
+      label-width="120px"
+      :rules="rules"
+      :model="fromData"
+      ref="deptForm"
+    >
       <el-form-item label="部门名称" prop="name">
         <el-input
           style="width: 80%"
@@ -20,7 +25,16 @@
           style="width: 80%"
           placeholder="请选择"
           v-model="fromData.manager"
-        />
+          @focus="getEmployeeSimple"
+        >
+          <!-- 需要循环生成选项   这里做一下简单的处理 显示的是用户名 存的也是用户名-->
+          <el-option
+            v-for="item in peoples"
+            :key="item.id"
+            :label="item.username"
+            :value="item.username"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
         <el-input
@@ -34,17 +48,21 @@
     </el-form>
     <!-- el-dialog 有专门放置底部操作栏的 插槽  具名插槽 -->
     <el-row slot="footer" type="flex" justify="center">
-      <!-- 列被分为24 -->
+      <!-- 列被分为 24 -->
       <el-col>
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+        <el-button size="small" @click="close">取消</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template> 
 
 <script>
-import { getDepartments } from "@/api/departments";
+import {
+  getDepartments,
+  getEmployeeSimple,
+  addDepartments,
+} from "@/api/departments";
 export default {
   props: {
     showDialog: {
@@ -72,7 +90,6 @@ export default {
         ? callback(new Error(`同级部门下已经有${value}的部门了`))
         : callback();
     };
-
     // 检查编码重复
     const checkCodeRepeat = async (rule, value, callback) => {
       console.log(666);
@@ -112,8 +129,36 @@ export default {
           { min: 1, max: 300, message: "要求1-300个字符" },
         ],
       },
+      peoples: [], // 接收获取的员工简单列表的数据
     };
   },
+  methods: {
+    btnOK() {
+      this.$refs.deptForm.validate(async (isOK) => {
+        if (isOK) {
+          // 表示可以提交了
+          await addDepartments({ ...this.fromData, pid: this.treeNode.id }); // 调用新增接口 添加父部门的id
+          this.$emit("addDepts");
+
+          this.$emit("update:showDialog", false);
+        }
+      });
+    },
+
+    // 获取员工简单列表数据
+    async getEmployeeSimple() {
+      this.peoples = await getEmployeeSimple();
+    },
+
+    close() {
+      this.$emit("update:showDialog", false);
+    },
+  },
+  computed: {
+    isEdit(){
+      
+    }
+  }
 };
 </script>
 
