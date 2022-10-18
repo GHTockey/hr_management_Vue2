@@ -1,32 +1,17 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" v-loading="loading">
     <div class="app-container">
       <el-card class="tree-card">
         <!-- 用了一个行列布局 -->
         <TreeNode :treeNode="company" :isRoot="true" @addDepts="addDepts" />
 
-        <el-tree
-          :data="departs"
-          :props="defaultProps"
-          :default-expand-all="true"
-        >
+        <el-tree :data="departs" :props="defaultProps" :default-expand-all="true">
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
-          <TreeNode
-            slot-scope="{ data }"
-            :treeNode="data"
-            @delDeprt="getDepartmentsData"
-            @addDepts="addDepts"
-            @editDepts="editDepts"
-          />
+          <TreeNode slot-scope="{ data }" :treeNode="data" @delDeprt="getDepartmentsData" @addDepts="addDepts" @editDepts="editDepts" />
         </el-tree>
       </el-card>
-      <AddDept
-      ref="addDept"
-        :showDialog.sync="showDialog"
-        :treeNode="node"
-        @addDepts="getDepartmentsData"
-      />
+      <AddDept ref="addDept" :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartmentsData" />
     </div>
   </div>
 </template>
@@ -46,6 +31,7 @@ export default {
       },
       showDialog: false,
       node: null,
+      loading: false,
     };
   },
   components: {
@@ -57,12 +43,16 @@ export default {
   },
   methods: {
     async getDepartmentsData() {
+      this.loading = true;
+
       let res = await getDepartments();
       // console.log(res);
       this.company = { name: res.companyName, manager: "负责人", id: "" };
       // this.departs = res.depts; // 需要将其转化成树形结构⬇️
       this.departs = tranListToTreeData(res.depts, ""); // 需要将其转化成树形结构
       // console.log(this.departs);
+
+      this.loading = false;
     },
     // 显示对话框
     addDepts(treeNode) {

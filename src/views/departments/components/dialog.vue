@@ -1,49 +1,20 @@
 <template>
   <el-dialog :title="isEdit" :visible="showDialog" @close="close">
-    <el-form
-      label-width="120px"
-      :rules="rules"
-      :model="fromData"
-      ref="deptForm"
-    >
+    <el-form label-width="120px" :rules="rules" :model="fromData" ref="deptForm">
       <el-form-item label="部门名称" prop="name">
-        <el-input
-          style="width: 80%"
-          placeholder="1-50个字符"
-          v-model="fromData.name"
-        />
+        <el-input style="width: 80%" placeholder="1-50个字符" v-model="fromData.name" />
       </el-form-item>
       <el-form-item label="部门编码" prop="code">
-        <el-input
-          style="width: 80%"
-          placeholder="1-50个字符"
-          v-model="fromData.code"
-        />
+        <el-input style="width: 80%" placeholder="1-50个字符" v-model="fromData.code" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select
-          style="width: 80%"
-          placeholder="请选择"
-          v-model="fromData.manager"
-          @focus="getEmployeeSimple"
-        >
+        <el-select style="width: 80%" placeholder="请选择" v-model="fromData.manager" @focus="getEmployeeSimple">
           <!-- 需要循环生成选项 这里做一下简单的处理 显示的是用户名 存的也是用户名-->
-          <el-option
-            v-for="item in peoples"
-            :key="item.id"
-            :label="item.username"
-            :value="item.username"
-          />
+          <el-option v-for="item in peoples" :key="item.id" :label="item.username" :value="item.username" />
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
-        <el-input
-          style="width: 80%"
-          placeholder="1-300个字符"
-          type="textarea"
-          :rows="3"
-          v-model="fromData.introduce"
-        />
+        <el-input style="width: 80%" placeholder="1-300个字符" type="textarea" :rows="3" v-model="fromData.introduce" />
       </el-form-item>
     </el-form>
     <!-- el-dialog 有专门放置底部操作栏的 插槽  具名插槽 -->
@@ -162,14 +133,12 @@ export default {
           if (this.fromData.id) {
             // 编辑模式  调用编辑接口
             await updateDepartments(this.fromData);
-            this.$emit("addDepts"); // 重新调用接口刷新数据
-            this.$emit("update:showDialog", false); // 关闭弹窗
           } else {
             // 新增模式
             await addDepartments({ ...this.fromData, pid: this.treeNode.id }); // 调用新增接口 添加父部门的id
-            this.$emit("addDepts"); // 重新调用接口刷新数据
-            this.$emit("update:showDialog", false); // 关闭弹窗
           }
+          this.$emit("addDepts"); // 重新调用接口刷新数据
+          this.$emit("update:showDialog", false); // 关闭弹窗
         }
       });
     },
