@@ -14,7 +14,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
-        <el-input style="width: 80%" placeholder="1-300个字符" type="textarea" :rows="3" v-model="fromData.introduce" />
+        <el-input style="width: 80%" placeholder="1-300 个字符" type="textarea" :rows="3" v-model="fromData.introduce" />
       </el-form-item>
     </el-form>
     <!-- el-dialog 有专门放置底部操作栏的 插槽  具名插槽 -->
