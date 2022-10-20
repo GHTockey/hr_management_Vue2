@@ -9,9 +9,11 @@
         <template #after>
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
         </template>
       </PageTools>
+      <!-- 新增表单组件 -->
+      <AddEmployee :isShow="showDialog" />
       <!-- 放置表格和分页 -->
       <el-card v-loading="loading">
         <el-table border :data="list">
@@ -49,6 +51,7 @@
 <script>
 import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
+import AddEmployee from "./components/add-employee.vue";
 export default {
   data() {
     return {
@@ -59,11 +62,19 @@ export default {
         total: 0, // 总数
       },
       loading: false,
+      showDialog: false, // 新增框体是否显示
     };
   },
+
+  // 创建完成钩子
   created() {
     this.getEmployeeListData();
   },
+
+  // 注册组件
+  components: { AddEmployee },
+
+  // 函数定义
   methods: {
     // 分页
     changePage(newPage) {
@@ -71,30 +82,34 @@ export default {
       this.getEmployeeListData();
     },
     async getEmployeeListData() {
-      this.loading = true;
-      const { rows, total } = await getEmployeeList(this.page);
-      this.page.total = total; // 总页数
-      this.list = rows;
-      this.loading = false;
+      try {
+        this.loading = true; // 开启 loading 效果
+        const { rows, total } = await getEmployeeList(this.page); // 发送请求获取数据
+        this.page.total = total; // 总页数
+        this.list = rows; // 数据列表
+        this.loading = false; // 关闭 loading 效果
+      } catch (error) {
+        console.log(error);
+      }
     },
     // 员工列表中的数据进行格式化
     formatEmployment(row, column, cellValue, index) {
       // 要去找 1 所对应的值
+      // EmployeeEnum 不用再 data 中定义, 导入直接使用
       const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue);
       return obj ? obj.value : "未知";
     },
     // 删除员工
-    async deleteEmployee(id){
+    async deleteEmployee(id) {
       try {
-        await this.$confirm('确定删除?');
+        await this.$confirm("确定删除?"); // 弹框是否确定
         await delEmployee(id); // 提交删除请求
         this.getEmployeeListData(); // 重新获取数据渲染
-        this.$message.success('操作成功'); // 提示信息
-
+        this.$message.success("操作成功"); // 提示信息
       } catch (error) {
         console.log(err);
       }
-    }
+    },
   },
 };
 </script>
