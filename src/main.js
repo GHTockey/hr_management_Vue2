@@ -18,6 +18,8 @@ import '@/permission' // permission control
 import Component from "@/components";
 Vue.use(Component);
 
+import * as filters from "@/filters";
+Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

@@ -4,7 +4,7 @@
       <PageTools :show-before="true">
         <!-- 具名插槽 -->
         <template #before>
-          <span>共166条记录</span>
+          <span>共{{page.total}}条记录</span>
         </template>
         <template #after>
           <el-button size="small" type="warning">导入</el-button>
@@ -15,14 +15,18 @@
       <!-- 放置表格和分页 -->
       <el-card v-loading="loading">
         <el-table border :data="list">
-          <el-table-column label="序号" sortable="" type="index" />
-          <el-table-column label="姓名" sortable="" prop="username" />
-          <el-table-column label="工号" sortable="" prop="workNumber" />
-          <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" />
-          <el-table-column label="部门" sortable="" prop="departmentName" />
-          <el-table-column label="入职时间" sortable="" prop="timeOfEntry" />
-          <el-table-column label="账户状态" sortable="" prop="enableState" />
-          <el-table-column label="操作" sortable="" fixed="right" width="280">
+          <el-table-column label="序号" sortable type="index" />
+          <el-table-column label="姓名" sortable prop="username" />
+          <el-table-column label="工号" sortable prop="workNumber" />
+          <el-table-column label="聘用形式" sortable :formatter="formatEmployment" prop="formOfEmployment" />
+          <el-table-column label="部门" sortable prop="departmentName" />
+          <el-table-column label="入职时间" sortable prop="timeOfEntry">
+            <template slot-scope="obj">
+              {{obj.row.timeOfEntry | formatDate}}
+            </template>
+          </el-table-column>
+          <el-table-column label="账户状态" sortable prop="enableState" />
+          <el-table-column label="操作" sortable fixed="right" width="280">
             <template>
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
@@ -44,6 +48,7 @@
 
 <script>
 import { getEmployeeList } from "@/api/employees";
+import EmployeeEnum from "@/api/constant/employees";
 export default {
   data() {
     return {
@@ -71,7 +76,14 @@ export default {
       this.list = rows;
       this.loading = false;
     },
+    // 格式化聘用形式
+    formatEmployment(row, column, cellValue, index) {
+      // 要去找 1所对应的值
+      const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue);
+      return obj ? obj.value : "未知";
+    },
   },
+  // 员工列表中的数据进行格式化   员工列表中的数据进行格式化    员工列表中的数据进行格式化
 };
 </script>
 
