@@ -53,6 +53,8 @@ import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
 export default {
+  // 注册组件
+  components: { AddEmployee },
   data() {
     return {
       list: null, // 列表数据
@@ -71,9 +73,6 @@ export default {
     this.getEmployeeListData();
   },
 
-  // 注册组件
-  components: { AddEmployee },
-
   // 函数定义
   methods: {
     // 分页
@@ -81,6 +80,7 @@ export default {
       this.page.page = newPage;
       this.getEmployeeListData();
     },
+    // 获取数据驱动页面
     async getEmployeeListData() {
       try {
         this.loading = true; // 开启 loading 效果

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增员工" :visible="isShow">
+  <el-dialog title="新增员工" :visible="isShow" @close="btnCancel">
     <!-- 表单 -->
     <el-form :model="formData" :rules="rules" label-width="120px" ref="addEmployee">
       <el-form-item label="姓名" prop="username">
@@ -13,7 +13,7 @@
       </el-form-item>
       <el-form-item label="聘用形式" prop="formOfEmployment">
         <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择">
-          <el-option v-for="item in employees.hireType" :key="item.id" :value="item.value" :label="item.value"/>
+          <el-option v-for="item in employees.hireType" :key="item.id" :value="item.id" :label="item.value"/>
         </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
@@ -126,6 +126,7 @@ export default {
         await this.$refs.addEmployee.validate(); // 校验整个表单
         await addEmployee(this.formData); // 调用新增接口 提交数据
         // console.log(this.$parent); 可以调用父组件上的实例
+        this.$parent.getEmployeeListData(); // 调用父方法 重新获取数据更新页面
         this.$parent.showDialog = false; // 关闭弹框
         this.$message.success('新增成功');
       } catch (error) {

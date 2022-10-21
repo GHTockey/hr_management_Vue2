@@ -6,7 +6,7 @@ export function getEmployeeList(params) {
     url: '/sys/user',
     params
   })
-}
+};
 
 // 删除员工接口
 export function delEmployee(id) {
@@ -14,7 +14,7 @@ export function delEmployee(id) {
     url: `/sys/user/${id}`,
     method: 'delete'
   })
-}
+};
 
 // 新增员工的接口
 export function addEmployee(data) {
@@ -23,4 +23,13 @@ export function addEmployee(data) {
     url: '/sys/user',
     data
   })
-}
+};
+
+// 封装一个导入员工的接口
+export function importEmployee(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'post',
+    data
+  })
+};
