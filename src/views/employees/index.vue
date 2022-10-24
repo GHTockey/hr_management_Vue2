@@ -7,8 +7,8 @@
           <span>共{{page.total}}条记录</span>
         </template>
         <template #after>
-          <el-button size="small" type="warning">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
+          <el-button size="small" type="danger" @click="exportEmp">导出</el-button>
           <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
         </template>
       </PageTools>
@@ -52,6 +52,7 @@
 import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
+import { formatDate } from "@/utils";
 export default {
   // 注册组件
   components: { AddEmployee },
@@ -110,6 +111,68 @@ export default {
         console.log(err);
       }
     },
+
+    // 导出员工 xlsx #############################################
+    async exportEmp() {
+      //  做操作
+      // 表头对应关系
+      const headers = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+      // 懒加载
+      import('@/vendor/Export2Excel').then(async excel => {
+        const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
+        const data = this.formatJson(headers, rows)
+
+        excel.export_json_to_excel({
+          header: Object.keys(headers),
+          data,
+          filename: '员工信息表',
+          autoWidth: true,
+          bookType: 'xlsx'
+
+        })
+        // 获取所有的数据
+
+        // excel.export_json_to_excel({
+        //   header: ['姓名', '薪资'],
+        //   data: [['张三', 12000], ['李四', 5000]],
+        //   filename: '员工薪资表',
+        //   autoWidth: true,
+        //   bookType: 'csv'
+        // })
+      })
+    },
+    // 该方法负责将数组转化成二维数组
+    formatJson(headers, rows) {
+      // 首先遍历数组
+      // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
+      return rows.map(item => {
+        return Object.keys(headers).map(key => {
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            return formatDate(item[headers[key]]) // 返回格式化之前的时间
+          } else if (headers[key] === 'formOfEmployment') {
+            var en = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
+            return en ? en.value : '未知'
+          }
+          return item[headers[key]]
+        }) // => ["张三", "13811"，"2018","1", "2018", "10002"]
+      })
+      // return data
+      // return rows.map(item => {
+      //   // item是对象  => 转化成只有值的数组 => 数组值的顺序依赖headers  {username: '张三'  }
+      //   // Object.keys(headers)  => ["姓名", "手机号",...]
+      //   return Object.keys(headers).map(key => {
+      //     return item[headers[key]]
+      //   }) // /  得到 ['张三'，’129‘，’dd‘,'dd']
+      // })
+    }
   },
 };
 </script>
