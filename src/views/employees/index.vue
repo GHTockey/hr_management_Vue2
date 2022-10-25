@@ -30,7 +30,7 @@
           <el-table-column label="账户状态" sortable prop="enableState" />
           <el-table-column label="操作" sortable fixed="right" width="280">
             <template slot-scope="{row}">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -52,7 +52,7 @@
 import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
-import { formatDate } from "@/utils";
+import { formatDate } from "@/filters";
 export default {
   // 注册组件
   components: { AddEmployee },
@@ -108,12 +108,12 @@ export default {
         this.getEmployeeListData(); // 重新获取数据渲染
         this.$message.success("操作成功"); // 提示信息
       } catch (error) {
-        console.log(err);
+        console.log(error);
       }
     },
 
     // 导出员工 xlsx #############################################
-    async exportEmp() {
+    exportEmp() {
       //  做操作
       // 表头对应关系
       const headers = {
@@ -129,14 +129,18 @@ export default {
       import('@/vendor/Export2Excel').then(async excel => {
         const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
         const data = this.formatJson(headers, rows)
-
+        // 复杂表头配置
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']];
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2'];
         excel.export_json_to_excel({
           header: Object.keys(headers),
           data,
           filename: '员工信息表',
           autoWidth: true,
-          bookType: 'xlsx'
-
+          bookType: 'xlsx',
+          // 复杂表头选项
+          multiHeader,
+          merges
         })
         // 获取所有的数据
 

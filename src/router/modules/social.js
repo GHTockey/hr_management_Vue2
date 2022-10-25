@@ -8,7 +8,7 @@ export default {
         {
             path: '', // 值为空表示在加载上一级路由时同时默认加载本路由
             component: () => import("@/views/social"),
-            meta: { title: '社保', icon: ''}
+            meta: { title: '社保', icon: 'el-icon-platform-eleme'}
         }
     ]
 }
