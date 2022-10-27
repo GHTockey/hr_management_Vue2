@@ -20,8 +20,13 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="个人详情" />
-          <el-tab-pane label="岗位信息" />
+          <el-tab-pane label="个人详情">
+            <component :is="UserComponent" />
+          </el-tab-pane>
+
+          <el-tab-pane label="岗位信息">
+            <component :is="JobInfo" />
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -29,12 +34,16 @@
 </template>
 
 <script>
+import JobInfo from "../components/job-info.vue";
+import UserComponent from "../components/user-info.vue";
 import { getUserDetailById } from "@/api/user";
 import { saveUserDetailById } from "@/api/employees";
 export default {
   data() {
     return {
-      loading: false,
+      JobInfo,
+      UserComponent,
+      loading: false, // loading 开关
       userId: this.$route.params.id,
       userInfo: {
         username: "",
@@ -64,7 +73,7 @@ export default {
     // 更新按钮
     async updateUserInfo() {
       try {
-        this.$refs.forms.validate(); // 校验
+        await this.$refs.forms.validate(); // 校验
         this.loading = true;
         await saveUserDetailById({
           ...this.userInfo,
