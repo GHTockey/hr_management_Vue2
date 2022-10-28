@@ -48,7 +48,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <UploadImg />
+            <UploadImg ref="updateAvatar" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -75,7 +75,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
-
+          <UploadImg ref="employeeImg" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -329,21 +329,37 @@ export default {
     async getPersonalDetailData() {
       // console.log("P", await getPersonalDetail(this.userId));
       this.formData = await getPersonalDetail(this.userId);
+      if (this.formData.staffPhoto) {
+        this.$refs.employeeImg.FileList = [
+          { url: this.formData.staffPhoto, upload: true },
+        ];
+      }
     },
     // userInfo
     async getUserDetailData() {
       // console.log("U", await getUserDetailById(this.userId));
       this.userInfo = await getUserDetailById(this.userId);
+
+      // 获取数据时赋予图片URL显示
+      if (this.userInfo.staffPhoto) {
+        // 这里我们赋值，同时需要给赋值的地址一个标记 upload: true 表示可以点击保存按钮
+        this.$refs.updateAvatar.FileList = [
+          { url: this.userInfo.staffPhoto, upload: true },
+        ];
+      }
     },
 
     // 保存按钮 1
     async saveUser() {
-      await saveUserDetailById(this.userInfo);
+      // console.log(this.$refs.updateAvatar.FileList && this.$refs.updateAvatar.FileList[0]);
+      let FileList = this.$refs.updateAvatar.FileList;
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: FileList && FileList[0].url,});
       this.$message.success("操作成功");
     },
     // 保存按钮 2
     async savePersonal() {
-      await updatePersonal({ ...this.formData, userId: this.userId });
+      let FileList = this.$refs.employeeImg.FileList;
+      await updatePersonal({ ...this.formData, userId: this.userId, staffPhoto: FileList && FileList[0].url });
       this.$message.success("操作成功");
     },
   },

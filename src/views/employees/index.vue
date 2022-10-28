@@ -18,6 +18,11 @@
       <el-card v-loading="loading">
         <el-table border :data="list">
           <el-table-column label="序号" sortable type="index" />
+          <el-table-column label="头像" sortable>
+            <template slot-scope="{row}">
+              <img :src="row.staffPhoto" v-isImgErr="require('@/assets/common/bigUserHeader.png')" alt="头像" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px">
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" sortable prop="username" />
           <el-table-column label="工号" sortable prop="workNumber" />
           <el-table-column label="聘用形式" sortable :formatter="formatEmployment" prop="formOfEmployment" />
@@ -117,31 +122,34 @@ export default {
       //  做操作
       // 表头对应关系
       const headers = {
-        '姓名': 'username',
-        '手机号': 'mobile',
-        '入职日期': 'timeOfEntry',
-        '聘用形式': 'formOfEmployment',
-        '转正日期': 'correctionTime',
-        '工号': 'workNumber',
-        '部门': 'departmentName'
-      }
+        姓名: "username",
+        手机号: "mobile",
+        入职日期: "timeOfEntry",
+        聘用形式: "formOfEmployment",
+        转正日期: "correctionTime",
+        工号: "workNumber",
+        部门: "departmentName",
+      };
       // 懒加载
-      import('@/vendor/Export2Excel').then(async excel => {
-        const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
-        const data = this.formatJson(headers, rows)
+      import("@/vendor/Export2Excel").then(async (excel) => {
+        const { rows } = await getEmployeeList({
+          page: 1,
+          size: this.page.total,
+        });
+        const data = this.formatJson(headers, rows);
         // 复杂表头配置
-        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']];
-        const merges = ['A1:A2', 'B1:F1', 'G1:G2'];
+        const multiHeader = [["姓名", "主要信息", "", "", "", "", "部门"]];
+        const merges = ["A1:A2", "B1:F1", "G1:G2"];
         excel.export_json_to_excel({
           header: Object.keys(headers),
           data,
-          filename: '员工信息表',
+          filename: "员工信息表",
           autoWidth: true,
-          bookType: 'xlsx',
+          bookType: "xlsx",
           // 复杂表头选项
           multiHeader,
-          merges
-        })
+          merges,
+        });
         // 获取所有的数据
 
         // excel.export_json_to_excel({
@@ -151,23 +159,28 @@ export default {
         //   autoWidth: true,
         //   bookType: 'csv'
         // })
-      })
+      });
     },
     // 该方法负责将数组转化成二维数组
     formatJson(headers, rows) {
       // 首先遍历数组
       // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
-      return rows.map(item => {
-        return Object.keys(headers).map(key => {
-          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
-            return formatDate(item[headers[key]]) // 返回格式化之前的时间
-          } else if (headers[key] === 'formOfEmployment') {
-            var en = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
-            return en ? en.value : '未知'
+      return rows.map((item) => {
+        return Object.keys(headers).map((key) => {
+          if (
+            headers[key] === "timeOfEntry" ||
+            headers[key] === "correctionTime"
+          ) {
+            return formatDate(item[headers[key]]); // 返回格式化之前的时间
+          } else if (headers[key] === "formOfEmployment") {
+            var en = EmployeeEnum.hireType.find(
+              (obj) => obj.id === item[headers[key]]
+            );
+            return en ? en.value : "未知";
           }
-          return item[headers[key]]
-        }) // => ["张三", "13811"，"2018","1", "2018", "10002"]
-      })
+          return item[headers[key]];
+        }); // => ["张三", "13811"，"2018","1", "2018", "10002"]
+      });
       // return data
       // return rows.map(item => {
       //   // item是对象  => 转化成只有值的数组 => 数组值的顺序依赖headers  {username: '张三'  }
@@ -176,7 +189,7 @@ export default {
       //     return item[headers[key]]
       //   }) // /  得到 ['张三'，’129‘，’dd‘,'dd']
       // })
-    }
+    },
   },
 };
 </script>

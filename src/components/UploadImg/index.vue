@@ -1,23 +1,14 @@
 <template>
   <div>
-    <el-upload list-type="picture-card"
-               action="#"
-               :file-list="FileList"
-               :http-request="uploadData"
-               :on-preview="handlePreview"
-               :on-change="changeFile"
-               :before-upload="verifyImg"
-               :on-remove="handleRemove"
-               :class="{ disabled: uploadsNum }">
-      <i
-         class="el-icon-plus" />
+    <el-upload list-type="picture-card" action="#" :file-list="FileList" :http-request="uploadData" :on-preview="handlePreview" :on-change="changeFile" :before-upload="verifyImg" :on-remove="handleRemove" :class="{ disabled: uploadsNum }">
+      <i class="el-icon-plus" />
     </el-upload>
-    <el-dialog title="图片"
-               :visible.sync="showDialog">
-      <img :src="imgUrl"
-           style="width: 100%"
-           alt="" />
+    <el-dialog title="图片" :visible.sync="showDialog">
+      <img :src="imgUrl" style="width: 100%" alt="" />
     </el-dialog>
+    <!-- 进度条 -->
+    <el-progress v-if="showPropress" :percentage="percentage">
+    </el-progress>
   </div>
 </template>
 
@@ -39,11 +30,14 @@ export default {
       showDialog: false,
       imgUrl: "",
       FileList: [
-        {
-          url: "https://img0.baidu.com/it/u=2371305810,3587591415&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
-        },
+        // {
+        //   url: "https://img0.baidu.com/it/u=2371305810,3587591415&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
+        // },
       ],
       currentFileUid: "",
+      // 进度
+      percentage: 0,
+      showPropress: false,
     };
   },
   methods: {
@@ -83,6 +77,7 @@ export default {
     uploadData(params) {
       if (params.file) {
         // console.log(params.file.name);
+        this.showPropress = true; // 显示进度条
         cos.putObject(
           {
             Bucket: "ihrm-test-1312676635",
@@ -91,14 +86,20 @@ export default {
             Body: params.file, // 整个文件对象
             StorageClass: "STANDARD", // 上传模式 默认
             // 上传进度
-            // onProgress: (params) => {
-            //   this.percent = params.percent * 100;
-            // },
+            onProgress: (params) => {
+              this.percentage = params.percent * 100;
+              if (this.percentage === 100) {
+                this.showPropress = false;
+                setTimeout(() => {
+                  this.percentage = 0;
+                }, 2000);
+              }
+            },
           },
           (err, data) => {
             // 上传成功
             if (data.statusCode === 200) {
-              console.log(data);
+              // console.log(data);
               this.FileList = this.FileList.map((el) => {
                 // 确定上传的项 赋予云端返回的URL和一个键为true
                 if (el.uid === this.currentFileUid) {
