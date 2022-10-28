@@ -48,7 +48,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-            <UploadAvatar />
+            <UploadImg />
           </el-form-item>
         </el-col>
       </el-row>
@@ -238,7 +238,7 @@
 </template>
 
 <script>
-import UploadAvatar from "@/components/UploadImg";
+import UploadImg from "@/components/UploadImg";
 import EmployeeEnum from "@/api/constant/employees";
 import {
   getPersonalDetail, // 读取用户详情的基础信息 获取 formData 数据
@@ -248,7 +248,7 @@ import {
 import { getUserDetailById } from "@/api/user"; // 获取 userInfo 数据
 export default {
   components: {
-    UploadAvatar,
+    UploadImg,
   },
   data() {
     return {

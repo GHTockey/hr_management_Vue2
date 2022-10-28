@@ -5,6 +5,7 @@
                :file-list="FileList"
                :http-request="uploadData"
                :on-preview="handlePreview"
+               :on-change="changeFile"
                :before-upload="verifyImg"
                :on-remove="handleRemove"
                :class="{ disabled: uploadsNum }">
@@ -22,6 +23,10 @@
 
 <script>
 import COS from "cos-js-sdk-v5";
+const cos = new COS({
+  SecretId: "AKIDoStAC6vgJrMiv4BEBFKVgseIySvRxXJ0",
+  SecretKey: "jeYPECnWVUO5Yqwson1HsOyeMyb6T4kJ",
+});
 export default {
   props: {
     limit: {
@@ -38,11 +43,19 @@ export default {
           url: "https://img0.baidu.com/it/u=2371305810,3587591415&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
         },
       ],
+      currentFileUid: "",
     };
   },
   methods: {
+    // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+    changeFile(file, FileList) {
+      // this.FileList -> 本地数据组   FileList -> 上传到页面的文件对象实例
+      // 将本地上传的文件对象实例里的项存到本地数据组中
+      this.FileList = FileList.map((item) => item);
+    },
     // 上传前校验 后缀名/大小
     verifyImg(file) {
+      // console.log(file);
       let types = ["image/jpeg", "image/gif", "image/bmp", "image/png"];
       if (!types.includes(file.type)) {
         this.$message.error("上传图片只能是 JPG、GIF、BMP、PNG 格式!");
@@ -53,6 +66,8 @@ export default {
         this.$message.error("图片大小最大不能超过5M");
         return false;
       }
+      // 最后确定上传这个文件，将文件 uid 存下用于上传云端后返回的数据标识作比较
+      this.currentFileUid = file.uid;
       return true;
     },
     // 图片预览
@@ -66,22 +81,32 @@ export default {
     },
     // cos 上传
     uploadData(params) {
-      const cos = new COS({
-        SecretId: "AKIDoStAC6vgJrMiv4BEBFKVgseIySvRxXJ0",
-        SecretKey: "jeYPECnWVUO5Yqwson1HsOyeMyb6T4kJ",
-      });
       if (params.file) {
         // console.log(params.file.name);
         cos.putObject(
           {
             Bucket: "ihrm-test-1312676635",
             Region: "ap-nanjing",
-            Key: params.file.name,
-            Body: params.file,
-            StorageClass: "STANDARD",
+            Key: params.file.name, // 文件名
+            Body: params.file, // 整个文件对象
+            StorageClass: "STANDARD", // 上传模式 默认
+            // 上传进度
+            // onProgress: (params) => {
+            //   this.percent = params.percent * 100;
+            // },
           },
-          function (err, data) {
-            console.log(err || data);
+          (err, data) => {
+            // 上传成功
+            if (data.statusCode === 200) {
+              console.log(data);
+              this.FileList = this.FileList.map((el) => {
+                // 确定上传的项 赋予云端返回的URL和一个键为true
+                if (el.uid === this.currentFileUid) {
+                  return { url: `http://${data.Location}`, upload: true };
+                }
+                return el;
+              });
+            }
           }
         );
       }
