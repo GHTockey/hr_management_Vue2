@@ -15,8 +15,8 @@
 <script>
 import COS from "cos-js-sdk-v5";
 const cos = new COS({
-  SecretId: "AKIDoStAC6vgJrMiv4BEBFKVgseIySvRxXJ0",
-  SecretKey: "jeYPECnWVUO5Yqwson1HsOyeMyb6T4kJ",
+  SecretId: "",
+  SecretKey: "",
 });
 export default {
   props: {
