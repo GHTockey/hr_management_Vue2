@@ -52,7 +52,7 @@
       <!-- 二维码 弹框 -->
       <el-dialog title="二维码" :visible.sync="dialogVisible" width="30%">
         <el-row type="flex" justify="center">
-        <canvas ref="qrCodeCanvas" />
+          <canvas ref="qrCodeCanvas" />
         </el-row>
       </el-dialog>
     </div>
@@ -90,10 +90,15 @@ export default {
   // 函数定义
   methods: {
     openQrCode(url) {
-      this.dialogVisible = true;
-      this.$nextTick(() => {
-        Qrcode.toCanvas(this.$refs.qrCodeCanvas, url)
-      })
+      console.log(url);
+      if (url) {
+        this.dialogVisible = true;
+        this.$nextTick(() => {
+          Qrcode.toCanvas(this.$refs.qrCodeCanvas, url);
+        });
+      } else {
+        this.$message("用户没有上传图片");
+      }
     },
     // 分页
     changePage(newPage) {

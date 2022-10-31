@@ -32,6 +32,11 @@ Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
+import "@/assets/css/index.css"
+
+// 打印
+import Print from 'vue-print-nb'
+Vue.use(Print);
 
 import { settleImgError } from "@/directives"
 // console.log(settleImgError);

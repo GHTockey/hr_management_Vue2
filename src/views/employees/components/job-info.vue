@@ -1,5 +1,10 @@
 <template>
   <div class="job-info">
+        <el-row type="flex" justify="end">
+      <el-tooltip content="打印信息">
+        <i class="el-icon-s-order" @click="$router.push(`/employees/print/${userId}?type=job`)" />
+      </el-tooltip>
+    </el-row>
     <!-- 基础信息 -->
     <el-form label-width="220px">
       <div class="block">

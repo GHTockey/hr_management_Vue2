@@ -1,5 +1,10 @@
 <template>
   <div class="user-info">
+    <el-row type="flex" justify="end">
+      <el-tooltip content="打印信息">
+        <i class="el-icon-s-order" @click="$router.push(`/employees/print/${userId}?type=personal`)" />
+      </el-tooltip>
+    </el-row>
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
