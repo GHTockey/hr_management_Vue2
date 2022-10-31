@@ -13,11 +13,7 @@
 </template>
 
 <script>
-import COS from "cos-js-sdk-v5";
-const cos = new COS({
-  SecretId: "AKIDoStAC6vgJrMiv4BEBFKVgseIySvRxXJ0",
-  SecretKey: "jeYPECnWVUO5Yqwson1HsOyeMyb6T4kJ",
-});
+import cos from "../../../secreKey";
 export default {
   props: {
     limit: {

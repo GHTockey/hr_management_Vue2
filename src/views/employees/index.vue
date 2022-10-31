@@ -20,7 +20,7 @@
           <el-table-column label="序号" sortable type="index" />
           <el-table-column label="头像" sortable>
             <template slot-scope="{row}">
-              <img :src="row.staffPhoto" v-isImgErr="require('@/assets/common/bigUserHeader.png')" alt="头像" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px">
+              <img :src="row.staffPhoto" @click="openQrCode(row.staffPhoto)" v-isImgErr="require('@/assets/common/bigUserHeader.png')" alt="头像" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px">
             </template>
           </el-table-column>
           <el-table-column label="姓名" sortable prop="username" />
@@ -49,6 +49,12 @@
           <el-pagination layout="prev, pager, next" :page-size="page.size" :current-page="page.page" :total="page.total" @current-change="changePage" />
         </el-row>
       </el-card>
+      <!-- 二维码 弹框 -->
+      <el-dialog title="二维码" :visible.sync="dialogVisible" width="30%">
+        <el-row type="flex" justify="center">
+        <canvas ref="qrCodeCanvas" />
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -58,6 +64,7 @@ import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
 import { formatDate } from "@/filters";
+import Qrcode from "qrcode";
 export default {
   // 注册组件
   components: { AddEmployee },
@@ -71,6 +78,7 @@ export default {
       },
       loading: false,
       showDialog: false, // 新增框体是否显示
+      dialogVisible: false, // 二维码框
     };
   },
 
@@ -81,6 +89,12 @@ export default {
 
   // 函数定义
   methods: {
+    openQrCode(url) {
+      this.dialogVisible = true;
+      this.$nextTick(() => {
+        Qrcode.toCanvas(this.$refs.qrCodeCanvas, url)
+      })
+    },
     // 分页
     changePage(newPage) {
       this.page.page = newPage;

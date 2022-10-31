@@ -353,13 +353,30 @@ export default {
     async saveUser() {
       // console.log(this.$refs.updateAvatar.FileList && this.$refs.updateAvatar.FileList[0]);
       let FileList = this.$refs.updateAvatar.FileList;
-      await saveUserDetailById({ ...this.userInfo, staffPhoto: FileList && FileList[0].url,});
+      if (FileList.some((el) => !el.upload)) {
+        //  如果此时去找 upload为false的图片 找到了说明 有图片还没有上传完成
+        this.$message.warning("图片还没有上传完成");
+        return;
+      }
+      await saveUserDetailById({
+        ...this.userInfo,
+        staffPhoto: FileList && FileList.length ? FileList[0].url : "",
+      });
       this.$message.success("操作成功");
     },
     // 保存按钮 2
     async savePersonal() {
       let FileList = this.$refs.employeeImg.FileList;
-      await updatePersonal({ ...this.formData, userId: this.userId, staffPhoto: FileList && FileList[0].url });
+      if (FileList.some((el) => !el.upload)) {
+        //  如果此时去找 upload为false的图片 找到了说明 有图片还没有上传完成
+        this.$message.warning("图片还没有上传完成");
+        return;
+      }
+      await updatePersonal({
+        ...this.formData,
+        userId: this.userId,
+        staffPhoto: FileList && FileList.length ? FileList[0].url : "",
+      });
       this.$message.success("操作成功");
     },
   },

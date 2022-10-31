@@ -1,6 +1,6 @@
 export const settleImgError = {
     inserted(dom, options) {
-        console.log(dom, options);
+        // console.log(dom, options);
         dom.onerror = function () {
             dom.src = options.value;
         }
