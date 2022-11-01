@@ -39,7 +39,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -55,6 +55,8 @@
           <canvas ref="qrCodeCanvas" />
         </el-row>
       </el-dialog>
+      <!-- 分配角色 弹框 -->
+      <AssignRole ref="assignRole" :showRoleDialog.sync="showRoleDialog" />
     </div>
   </div>
 </template>
@@ -63,13 +65,15 @@
 import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
+import AssignRole from "./components/assign-role.vue";
 import { formatDate } from "@/filters";
 import Qrcode from "qrcode";
 export default {
   // 注册组件
-  components: { AddEmployee },
+  components: { AddEmployee, AssignRole },
   data() {
     return {
+      showRoleDialog: false,
       list: null, // 列表数据
       page: {
         page: 1, // 当前页码
@@ -79,6 +83,7 @@ export default {
       loading: false,
       showDialog: false, // 新增框体是否显示
       dialogVisible: false, // 二维码框
+      userId: "",
     };
   },
 
@@ -89,6 +94,12 @@ export default {
 
   // 函数定义
   methods: {
+    // 编辑角色
+    async editRole(id) {
+      // props 传值是异步的...
+      await this.$refs.assignRole.getUserDetailByIdData(id);
+      this.showRoleDialog = true;
+    },
     openQrCode(url) {
       console.log(url);
       if (url) {

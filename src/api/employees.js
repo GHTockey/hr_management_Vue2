@@ -35,7 +35,7 @@ export function importEmployee(data) {
 };
 
 // 修改用户基本信息
- export function saveUserDetailById(data) {
+export function saveUserDetailById(data) {
   return request({
     url: `/sys/user/${data.id}`,
     method: 'put',
@@ -44,7 +44,7 @@ export function importEmployee(data) {
 }
 
 // 获取用户详情信息
- export function getPersonalDetail(id) {
+export function getPersonalDetail(id) {
   return request({
     url: `/employees/${id}/personalInfo`
   })
@@ -74,5 +74,14 @@ export function updateJob(data) {
     url: `/employees/${data.userId}/jobs`,
     method: 'put',
     data
+  })
+}
+
+// 给用户分配角色
+export function assignRoles(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    data,
+    method: 'put'
   })
 }
