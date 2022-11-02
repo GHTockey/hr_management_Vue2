@@ -15,14 +15,14 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9999 // dev port
 
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
+// 所有配置项说明都可以在 https://cli.vuejs.org/config/ 中找到
 module.exports = {
   /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
+   * 如果您计划在子路径下部署站点，则需要设置 publicPath,
+   * 例如 GitHub Pages。如果计划将站点部署到 https://foo.github.io/bar/,
+   * 则 publicPath 应设置为 “/bar/”.
+   * 在大多数情况下，请使用“/”!!!
+   * 细节：https://cli.vuejs.org/config/#publicpath
    */
   publicPath: '/',
   outputDir: 'dist',
@@ -31,7 +31,7 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
   devServer: {
-    port: port,
+    port: port, // 端口
     open: true,
     overlay: {
       warnings: false,

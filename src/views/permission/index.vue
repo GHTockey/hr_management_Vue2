@@ -9,25 +9,54 @@
       </page-tools>
       <!-- 表格 -->
       <!-- row-key="id" 树形结构控制 -->
-      <el-table border :data="list"  row-key="id" >
+      <el-table border :data="list" row-key="id">
         <el-table-column align="center" label="名称" prop="name" />
         <el-table-column align="center" label="标识" prop="code" />
         <el-table-column align="center" label="描述" prop="description" />
         <el-table-column align="center" label="操作">
-          <template>
-            <el-button type="text">添加</el-button>
-            <el-button type="text">编辑</el-button>
-            <el-button type="text">删除</el-button>
+          <template slot-scope="{row}">
+            <el-button v-if="row.type == 1" type="text" @click="addPermission(row.id)">添加</el-button>
+            <el-button type="text" @click="editPermission(row.id)">编辑</el-button>
+            <el-button type="text" @click="delPermission(row.id)">删除</el-button>
           </template>
         </el-table-column>
-
       </el-table>
+      <!-- 放置一个弹层 用来编辑新增节点 -->
+      <el-dialog :title="`${showText}权限点`" :visible="showDialog" @close="btnCancel">
+        <!-- 表单 -->
+        <el-form ref="perForm" :model="formData" :rules="rules" label-width="120px">
+          <el-form-item label="权限名称" prop="name">
+            <el-input v-model="formData.name" style="width:90%" />
+          </el-form-item>
+          <el-form-item label="权限标识" prop="code">
+            <el-input v-model="formData.code" style="width:90%" />
+          </el-form-item>
+          <el-form-item label="权限描述">
+            <el-input v-model="formData.description" style="width:90%" />
+          </el-form-item>
+          <el-form-item label="开启">
+            <el-switch v-model="formData.enVisible" active-value="1" inactive-value="0" />
+          </el-form-item>
+        </el-form>
+        <el-row slot="footer" type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+            <el-button size="small" @click="btnCancel">取消</el-button>
+          </el-col>
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { getPermissionList } from "@/api/permisson";
+import {
+  getPermissionList, // 获取权限
+  addPermission, // 新增权限
+  updatePermission, // 更新权限
+  delPermission, // 删除权限
+  getPermissionDetail, // 获取权限详情
+} from "@/api/permisson";
 import { tranListToTreeData } from "@/utils";
 export default {
   data() {
@@ -57,13 +86,64 @@ export default {
   },
   computed: {
     showText() {
-      return this.formData.id ? "编辑" : "新增";
+      return this.formData.type ? "编辑" : "新增";
     },
   },
   methods: {
     async getPermissionList() {
       // console.log(await getPermissionList());
       this.list = tranListToTreeData(await getPermissionList(), "0");
+    },
+    btnCancel() {
+      this.formData = {
+        name: "", // 名称
+        code: "", // 标识
+        description: "", // 描述
+        type: "", // 类型 该类型 不需要显示 因为点击添加的时候已经知道类型了
+        pid: "", // 因为做的是树 需要知道添加到哪个节点下了
+        enVisible: "0", // 开启
+      };
+      this.$refs.perForm.resetFields(); // 重置表单校验
+      this.showDialog = false; // 关闭弹框
+    },
+    async btnOK() {
+      try {
+        await this.$refs.perForm.validate(); // 检验整个表单
+        if (this.formData.id) {
+          // 有 id 表示编辑
+          await updatePermission(this.formData);
+        } else {
+          await addPermission(this.formData);
+        }
+        this.$message.success("操作成功");
+        this.getPermissionList(); // 重新获取数据
+        this.showDialog = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 添加
+    addPermission(id, type) {
+      // console.log(id);
+      this.formData.pid = id;
+      this.showDialog = true;
+      this.formData.type = type; // null 添加
+    },
+    // 删除
+    async delPermission(id) {
+      try {
+        await this.$confirm("确定删除吗?");
+        await delPermission(id);
+        this.$message.success("操作成功");
+        this.getPermissionList(); // 重新获取数据
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 编辑
+    async editPermission(id) {
+      this.formData = await getPermissionDetail(id); // 发起请求且赋值本地数据
+      this.showDialog = true; // 弹框
     },
   },
 };
