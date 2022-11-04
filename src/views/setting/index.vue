@@ -208,11 +208,9 @@ export default {
     },
 
 
-
-
-
     btnPermCancel() {
       this.permData = []; // 重置数据
+      this.selectCheck = [];
       this.showPermDialog = false; // 关闭弹框
     },
     async btnPermOK(){

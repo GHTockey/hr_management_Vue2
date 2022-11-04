@@ -19,12 +19,12 @@ import socialRouter from '@/router/modules/social'
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * hidden: true                   如果设置为 true，则项目将不会显示在侧边栏中（默认值为 false）
+ * alwaysShow: true               如果设置为 true，将始终显示根菜单
+ *                                如果未设置始终显示，当项目有多个子路由时，
+ *                                它将变为嵌套模式，否则不显示根菜单
+ * redirect: noRedirect           如果设置了no重定向，则不会在痕迹导航中重定向
+ * name:'router-name'             名称由<keep-alive>（必须设置!!!）使用）
  * meta : {
     roles: ['admin','editor']    控制页面角色（您可以设置多个角色）
     title: 'title'               名称显示在侧边栏和面包屑中（推荐套装）
@@ -73,13 +73,6 @@ export const constantRoutes = [
     }]
   },
 
-
-
-
-
-
-
-
   // 404 页必须放在末尾 !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -99,7 +92,7 @@ export const asyncRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()

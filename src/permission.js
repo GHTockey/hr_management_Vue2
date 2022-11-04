@@ -5,7 +5,7 @@ import 'nprogress/nprogress.css';
 
 const whiteList = ['/login', '/404'];
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start();
   // console.log(!!store.getters.token);
   if (store.getters.token) { // 有无 token
@@ -13,9 +13,16 @@ router.beforeEach((to, from, next) => {
       next('/');
     } else {
       if (!store.state.user.userInfo.userId) {
-        store.dispatch('user/getUserInfo')
+        let { roles } = await store.dispatch('user/getUserInfo');
+        // console.log(roles);
+        // 调用 actions 过滤权限路由
+        let routes = await store.dispatch('permission/filterRouter',roles.menus);
+        // console.log(routes);
+        router.addRoutes(routes);
+        next(to.path);
+      } else {
+        next();
       }
-      next();
     }
   } else { // 没有 token
     if (whiteList.indexOf(to.path) != -1) { // hash 是否在白名单
@@ -31,8 +38,6 @@ router.beforeEach((to, from, next) => {
 // router.afterEach(route => {
 //   NProgress.done();
 // })
-
-
 
 
 

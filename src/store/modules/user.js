@@ -40,6 +40,7 @@ export default {
       let res2 = await getUserDetailById(res.userId);
       context.commit('setUserInfo', { ...res, ...res2 }) // 将整个的个人信息设置到用户的vuex数据中
       return res // 这里为什么要返回 为后面埋下伏笔
+      // 《后》 使 dispatch 调用时可以得到返回值
     },
 
     // 退出登录
