@@ -1,10 +1,6 @@
 <template>
   <div class="navbar">
-    <hamburger
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <div class="app-breadcrumb">
       你干嘛鸡你太美股份有限公司
       <span class="breadBtn">体验版</span>
@@ -40,21 +36,21 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 
 export default {
-  data () {
+  data() {
     return {
-      defaultImg: require("@/assets/common/bigUserHeader.png") // 动态导入
+      defaultImg: require("@/assets/common/bigUserHeader.png"), // 动态导入
       // defaultImg: "@/assets/common/bigUserHeader.png" // 不能写死,会一直触发 vue 更新 dom
-    }
+    };
   },
   components: {
     Breadcrumb,
     Hamburger,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar","name"]),
+    ...mapGetters(["sidebar", "avatar", "name"]),
   },
   methods: {
-    ...mapActions(['logout']),
+    ...mapActions(["logout"]),
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },
@@ -62,7 +58,7 @@ export default {
       await this.$store.dispatch("user/logout");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
-  }
+  },
 };
 </script>
 
