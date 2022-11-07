@@ -124,7 +124,7 @@ export default {
     },
     // 添加
     addPermission(id, type) {
-      // console.log(id);
+      console.log(id);
       this.formData.pid = id;
       this.showDialog = true;
       this.formData.type = type; // null 添加

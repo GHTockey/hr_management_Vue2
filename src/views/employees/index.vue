@@ -40,7 +40,7 @@
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
-              <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
+              <!-- <el-button v-if="checkPermission('del')" type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import checkPermission from "@/mixin/checkPermission";
 import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
@@ -91,6 +92,9 @@ export default {
   created() {
     this.getEmployeeListData();
   },
+  // computed: {
+  //   checkPermission
+  // },
 
   // 函数定义
   methods: {

@@ -18,7 +18,7 @@ router.beforeEach(async (to, from, next) => {
         // 调用 actions 过滤权限路由
         let routes = await store.dispatch('permission/filterRouter', roles.menus);
         // console.log(routes);
-        router.addRoutes([...routes, { path: '/404', component: () => import('@/views/404'), hidden: true },]);
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }]);
         next(to.path);
       } else {
         next();

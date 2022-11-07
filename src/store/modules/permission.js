@@ -17,7 +17,7 @@ const actions = {
         menus.forEach(item => {
             routes.push(...asyncRoutes.filter(el => el.name === item))
         });
-        context.commit('setRoutes',routes);
+        context.commit('setRoutes', routes);
         return routes;
     }
 };
