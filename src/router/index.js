@@ -14,6 +14,7 @@ import attendancesRouter from '@/router/modules/attendances'
 import salarysRouter from '@/router/modules/salarys'
 import settingRouter from '@/router/modules/setting'
 import socialRouter from '@/router/modules/social'
+import userRouter from "@/router/modules/user";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -72,6 +73,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  userRouter,
 
   // 404 页必须放在末尾 !!!
   { path: '*', redirect: '/404', hidden: true }

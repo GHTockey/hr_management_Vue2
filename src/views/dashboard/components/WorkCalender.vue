@@ -57,7 +57,6 @@ export default {
       let year = this.currentYear;
       let month = this.currentMonth;
       this.currentDate = new Date(`${year}-${month}-1`);
-      console.log(this.currentDate,`${year}-${month}-1`);
     },
   },
 };

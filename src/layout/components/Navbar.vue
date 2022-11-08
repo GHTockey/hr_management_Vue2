@@ -8,6 +8,7 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <ScreenFull class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-isImgErr="defaultImg" :src="avatar" class="user-avatar" />
@@ -34,6 +35,7 @@
 import { mapActions, mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
+import ScreenFull from "@/components/ScreenFull";
 
 export default {
   data() {
@@ -45,6 +47,7 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
+    ScreenFull
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "name"]),
@@ -102,7 +105,7 @@ export default {
       height: 100%;
       font-size: 18px;
       color: #5a5e66;
-      vertical-align: text-bottom;
+      vertical-align: middle;
 
       &.hover-effect {
         cursor: pointer;
