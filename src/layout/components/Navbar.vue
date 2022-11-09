@@ -8,7 +8,13 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <!-- 语言切换 -->
+      <Lang class="right-menu-item" />
+      <!-- 颜色切换 -->
+      <ThemePicker class="right-menu-item" />
+      <!-- 全屏按钮 -->
       <ScreenFull class="right-menu-item" />
+      <!-- 头像 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-isImgErr="defaultImg" :src="avatar" class="user-avatar" />
@@ -36,6 +42,8 @@ import { mapActions, mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import ScreenFull from "@/components/ScreenFull";
+import ThemePicker from "@/components/ThemePicker";
+import Lang from "@/components/lang";
 
 export default {
   data() {
@@ -47,7 +55,9 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ScreenFull
+    ScreenFull,
+    ThemePicker,
+    Lang
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "name"]),
